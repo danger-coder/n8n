@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: n8n
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: oregon
+
+    envVars:
+      - key: N8N_HOST
+        value: 0.0.0.0
+      - key: N8N_PORT
+        value: 5678
+      - key: N8N_PROTOCOL
+        value: https
+      - key: NODE_ENV
+        value: production
+      - key: WEBHOOK_URL
+        sync: false          # set to your Render public URL after first deploy
+      - key: N8N_ENCRYPTION_KEY
+        generateValue: true  # auto-generated, store it safely
+      - key: DB_TYPE
+        value: sqlite
+      - key: N8N_USER_FOLDER
+        value: /opt/render/project/data
+
+    disk:
+      name: n8n-data
+      mountPath: /opt/render/project/data
+      sizeGB: 1              # free tier: 1 GB persistent disk
+
+    healthCheckPath: /healthz
